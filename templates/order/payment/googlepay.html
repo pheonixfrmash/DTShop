@@ -1,0 +1,32 @@
+{% extends "order/payment/details.html" %}
+{% load bootstrap_form from bootstrap4 %}
+{% load i18n %}
+{% load l10n %}
+
+{% block forms %}
+<form method="POST" id="payment-form" class="form-horizontal"{% if form.action %} action="{{ form.action }}"{% endif %} novalidate>
+  {% csrf_token %}
+  {% if form.errors or form.non_field_errors %}
+    <blockquote>
+      {% for non_field_error in form.non_field_errors %}
+        {{ non_field_error }}
+      {% endfor %}
+      {% for error in form.errors %}
+        {{ error }}
+      {% endfor %}
+    </blockquote>
+  {% endif %}
+  <div class="form-group">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-10">
+        <div class="bt-drop-in-wrapper">
+          <div id="bt-dropin"></div>
+        </div>
+        <input type="hidden" id="nonce" name="payment_method_nonce"/>
+        <input type="hidden" id="amount" name="amount" value="{% localize off %}{{ payment.total }}{% endlocalize %}"/>
+        <button type="submit" class="btn btn-primary">
+          {% trans "Make payment" context "Payment form primary action" %}
+        </button>
+      </div>
+    </div>
+  </form>
